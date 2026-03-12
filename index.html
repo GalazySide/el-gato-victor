@@ -7,591 +7,303 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Special+Elite&family=Uncial+Antiqua&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --void:#000;
-  --deepred:#1a0000;
-  --blood:#6b0000;
-  --crimson:#990000;
-  --ember:#b84400;
-  --bone:#9e8060;
-  --parch:#b09060;
-  --dim:#4a3828;
+  --void:#000;--deepred:#1a0000;--blood:#6b0000;--crimson:#990000;
+  --ember:#b84400;--bone:#9e8060;--parch:#b09060;--dim:#4a3828;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-
-body{
-  background:#000;
-  color:var(--bone);
-  font-family:'Special Elite',cursive;
-  font-size:17px;
-  overflow-x:hidden;
-  cursor:crosshair;
-}
-
-/* GRAIN OVERLAY */
-body::before{
-  content:'';
-  position:fixed;inset:0;z-index:9000;
-  pointer-events:none;
-  opacity:0.55;
+body{background:#000;color:var(--bone);font-family:'Special Elite',cursive;font-size:17px;overflow-x:hidden;cursor:crosshair;}
+body::before{content:'';position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:.55;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)' opacity='0.12'/%3E%3C/svg%3E");
-  mix-blend-mode:multiply;
-}
+  mix-blend-mode:multiply;}
+body::after{content:'';position:fixed;inset:0;z-index:8999;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.92) 100%);}
+#ash-canvas{position:fixed;inset:0;z-index:8998;pointer-events:none;}
 
-/* VIGNETTE */
-body::after{
-  content:'';
-  position:fixed;inset:0;z-index:8999;pointer-events:none;
-  background:radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.92) 100%);
-}
-
-/* HERO */
-.hero{
-  min-height:100vh;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  position:relative;
-  padding:5rem 2rem 3rem;
-  overflow:hidden;
-  background:
-    radial-gradient(ellipse at 50% 100%, rgba(60,0,0,0.9) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 30%, rgba(10,0,0,0.5) 0%, transparent 60%),
-    #000;
-}
-
-.penta-bg{
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-52%);
-  width:min(85vw,680px);
-  opacity:0.045;
-  animation:rot 80s linear infinite;
-  pointer-events:none;
-}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;padding:5rem 2rem 3rem;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 100%,rgba(60,0,0,.9) 0%,transparent 55%),
+             radial-gradient(ellipse at 50% 30%,rgba(10,0,0,.5) 0%,transparent 60%),#000;}
+.penta-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);width:min(85vw,680px);
+  opacity:.045;animation:rot 80s linear infinite;pointer-events:none;}
 @keyframes rot{to{transform:translate(-50%,-52%) rotate(360deg);}}
-
-.blood-pool{
-  position:absolute;bottom:0;left:0;right:0;
-  height:160px;pointer-events:none;
-  background:
-    radial-gradient(ellipse at 30% 100%, rgba(80,0,0,0.55) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 100%, rgba(60,0,0,0.5) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 100%, rgba(100,0,0,0.65) 0%, transparent 60%);
-  animation:pool-breathe 7s ease-in-out infinite;
-}
+.blood-pool{position:absolute;bottom:0;left:0;right:0;height:160px;pointer-events:none;
+  background:radial-gradient(ellipse at 30% 100%,rgba(80,0,0,.55) 0%,transparent 50%),
+             radial-gradient(ellipse at 70% 100%,rgba(60,0,0,.5) 0%,transparent 50%),
+             radial-gradient(ellipse at 50% 100%,rgba(100,0,0,.65) 0%,transparent 60%);
+  animation:pool-breathe 7s ease-in-out infinite;}
 @keyframes pool-breathe{0%,100%{opacity:.7;}50%{opacity:1;}}
-
 .embers{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
-.ember{
-  position:absolute;
-  border-radius:50%;
-  background:var(--crimson);
-  box-shadow:0 0 4px var(--crimson);
-  animation:rise linear infinite;
-  opacity:0;
-}
-@keyframes rise{
-  0%{transform:translateY(0) translateX(0);opacity:0;}
-  10%{opacity:.8;}
-  80%{opacity:.4;}
-  100%{transform:translateY(-100vh) translateX(var(--dx));opacity:0;}
-}
-
-.open-eyebrow{
-  font-family:'Cinzel',serif;
-  font-size:clamp(.5rem,1.4vw,.7rem);
-  letter-spacing:.7em;
-  color:var(--blood);
-  text-transform:uppercase;
-  text-shadow:0 0 15px var(--blood);
-  margin-bottom:2rem;
-  animation:flicker 12s infinite;
-  position:relative;z-index:2;
-}
-.hero-title{
-  font-family:'Cinzel',serif;
-  font-weight:900;
-  font-size:clamp(3.5rem,12vw,9rem);
-  color:#c0c0c0;
-  line-height:.9;
-  letter-spacing:.12em;
-  text-shadow:
-    0 0 8px #aaa,
-    0 0 25px var(--crimson),
-    0 0 70px var(--blood),
-    0 0 140px rgba(80,0,0,.5);
-  animation:pulse-glow 5s ease-in-out infinite;
-  margin-bottom:.2em;
-  position:relative;z-index:2;
-}
+.ember{position:absolute;border-radius:50%;background:var(--crimson);box-shadow:0 0 4px var(--crimson);animation:rise linear infinite;opacity:0;}
+@keyframes rise{0%{transform:translateY(0) translateX(0);opacity:0;}10%{opacity:.8;}80%{opacity:.4;}100%{transform:translateY(-100vh) translateX(var(--dx));opacity:0;}}
+.open-eyebrow{font-family:'Cinzel',serif;font-size:clamp(.5rem,1.4vw,.7rem);letter-spacing:.7em;color:var(--blood);
+  text-transform:uppercase;text-shadow:0 0 15px var(--blood);margin-bottom:2rem;animation:flicker 12s infinite;position:relative;z-index:2;}
+.hero-title{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(3.5rem,12vw,9rem);color:#c0c0c0;
+  line-height:.9;letter-spacing:.12em;
+  text-shadow:0 0 8px #aaa,0 0 25px var(--crimson),0 0 70px var(--blood),0 0 140px rgba(80,0,0,.5);
+  animation:pulse-glow 5s ease-in-out infinite;margin-bottom:.2em;position:relative;z-index:2;}
 @keyframes pulse-glow{
   0%,100%{text-shadow:0 0 8px #aaa,0 0 25px var(--crimson),0 0 70px var(--blood),0 0 140px rgba(80,0,0,.5);}
-  50%{text-shadow:0 0 16px #fff,0 0 50px var(--crimson),0 0 110px var(--blood),0 0 200px rgba(120,0,0,.7);}
-}
+  50%{text-shadow:0 0 16px #fff,0 0 50px var(--crimson),0 0 110px var(--blood),0 0 200px rgba(120,0,0,.7);}}
 @keyframes flicker{0%,96%,100%{opacity:1;}97%{opacity:.2;}98.5%{opacity:.9;}99%{opacity:.3;}99.5%{opacity:1;}}
-
-.hero-sub{
-  font-family:'Cinzel',serif;
-  font-size:clamp(.5rem,1.6vw,.8rem);
-  letter-spacing:.5em;
-  color:var(--dim);
-  text-transform:uppercase;
-  margin-bottom:3.5rem;
-  position:relative;z-index:2;
-}
-
-/* VICTOR IMAGE CIRCLE */
-.ritual-circle{
-  position:relative;
-  width:clamp(240px,38vw,400px);
-  margin:0 auto 2rem;
-  z-index:2;
-}
-.ritual-circle-glow{
-  position:absolute;inset:-50px;
-  background:radial-gradient(ellipse at center, rgba(100,0,0,.4) 0%, transparent 65%);
-  animation:cglow 6s ease-in-out infinite;
-  pointer-events:none;border-radius:50%;
-}
+.hero-sub{font-family:'Cinzel',serif;font-size:clamp(.5rem,1.6vw,.8rem);letter-spacing:.5em;color:var(--dim);
+  text-transform:uppercase;margin-bottom:3.5rem;position:relative;z-index:2;}
+.ritual-circle{position:relative;width:clamp(240px,38vw,400px);margin:0 auto 2rem;z-index:2;}
+.ritual-circle-glow{position:absolute;inset:-50px;
+  background:radial-gradient(ellipse at center,rgba(100,0,0,.4) 0%,transparent 65%);
+  animation:cglow 6s ease-in-out infinite;pointer-events:none;border-radius:50%;}
 @keyframes cglow{0%,100%{opacity:.5;transform:scale(1);}50%{opacity:1;transform:scale(1.12);}}
-
-.circle-ring{
-  position:absolute;inset:-20px;z-index:2;pointer-events:none;
-  animation:ring-rot 30s linear infinite reverse;
-}
+.circle-ring{position:absolute;inset:-20px;z-index:2;pointer-events:none;animation:ring-rot 30s linear infinite reverse;}
 @keyframes ring-rot{to{transform:rotate(360deg);}}
-
-.victor-wrap{
-  position:relative;overflow:hidden;
-  border:2px solid rgba(100,0,0,.6);
-  border-radius:50%;
-  box-shadow:
-    0 0 0 1px rgba(60,0,0,.4),
-    inset 0 0 40px rgba(0,0,0,.9),
-    0 0 40px rgba(80,0,0,.4),
-    0 0 90px rgba(60,0,0,.2);
-}
-.victor-img{
-  width:100%;display:block;
-  filter:grayscale(0.5) contrast(1.5) brightness(0.55) sepia(0.4) saturate(0.5) hue-rotate(-5deg);
-  animation:img-breathe 9s ease-in-out infinite;
-}
+.victor-wrap{position:relative;overflow:hidden;border:2px solid rgba(100,0,0,.6);border-radius:50%;
+  box-shadow:0 0 0 1px rgba(60,0,0,.4),inset 0 0 40px rgba(0,0,0,.9),0 0 40px rgba(80,0,0,.4),0 0 90px rgba(60,0,0,.2);}
+.victor-img{width:100%;display:block;
+  filter:grayscale(.5) contrast(1.5) brightness(.55) sepia(.4) saturate(.5) hue-rotate(-5deg);
+  animation:img-breathe 9s ease-in-out infinite;}
 @keyframes img-breathe{
-  0%,100%{filter:grayscale(0.5) contrast(1.5) brightness(0.55) sepia(0.4) saturate(0.5);}
-  50%{filter:grayscale(0.7) contrast(1.8) brightness(0.38) sepia(0.6) saturate(0.3);}
-}
-.victor-wrap::before{
-  content:'';position:absolute;inset:0;z-index:3;
-  background:repeating-linear-gradient(0deg,
-    transparent,transparent 3px,
-    rgba(80,0,0,.1) 3px,rgba(80,0,0,.1) 4px);
-  pointer-events:none;border-radius:50%;
-}
-.victor-wrap::after{
-  content:'';position:absolute;inset:0;z-index:4;
-  background:radial-gradient(ellipse at center, transparent 40%, rgba(20,0,0,.75) 100%);
-  pointer-events:none;border-radius:50%;
-}
-
+  0%,100%{filter:grayscale(.5) contrast(1.5) brightness(.55) sepia(.4) saturate(.5);}
+  50%{filter:grayscale(.7) contrast(1.8) brightness(.38) sepia(.6) saturate(.3);}}
+.victor-wrap::before{content:'';position:absolute;inset:0;z-index:3;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(80,0,0,.1) 3px,rgba(80,0,0,.1) 4px);
+  pointer-events:none;border-radius:50%;}
+.victor-wrap::after{content:'';position:absolute;inset:0;z-index:4;
+  background:radial-gradient(ellipse at center,transparent 40%,rgba(20,0,0,.75) 100%);
+  pointer-events:none;border-radius:50%;}
 .drips{position:absolute;bottom:-48px;left:0;right:0;z-index:5;display:flex;justify-content:space-evenly;pointer-events:none;}
-.drip{
-  width:3px;
-  background:linear-gradient(to bottom,#5a0000,transparent);
-  border-radius:0 0 50% 50%;
-  animation:drip-anim var(--dur,4s) ease-in var(--delay,0s) infinite;
-}
+.drip{width:3px;background:linear-gradient(to bottom,#5a0000,transparent);border-radius:0 0 50% 50%;animation:drip-anim var(--dur,4s) ease-in var(--delay,0s) infinite;}
 @keyframes drip-anim{0%{height:0;opacity:0;}15%{opacity:1;}100%{height:55px;opacity:0;}}
-
-.rune{
-  position:absolute;
-  font-family:'Cinzel',serif;
-  font-size:1.3rem;
-  color:var(--crimson);
-  text-shadow:0 0 12px var(--blood);
-  opacity:.7;z-index:6;
-}
-.rune-tl{top:-1.8rem;left:10%;}
-.rune-tr{top:-1.8rem;right:10%;}
-.rune-bl{bottom:-1.8rem;left:10%;}
-.rune-br{bottom:-1.8rem;right:10%;}
-
-.scroll-lure{
-  margin-top:2.5rem;
-  font-family:'Cinzel',serif;
-  font-size:.55rem;letter-spacing:.5em;
-  color:rgba(100,0,0,.7);text-transform:uppercase;
-  animation:bob 2.5s ease-in-out infinite;
-  position:relative;z-index:2;
-}
+.rune{position:absolute;font-family:'Cinzel',serif;font-size:1.3rem;color:var(--crimson);text-shadow:0 0 12px var(--blood);opacity:.7;z-index:6;}
+.rune-tl{top:-1.8rem;left:10%;}.rune-tr{top:-1.8rem;right:10%;}.rune-bl{bottom:-1.8rem;left:10%;}.rune-br{bottom:-1.8rem;right:10%;}
+.scroll-lure{margin-top:2.5rem;font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.5em;
+  color:rgba(100,0,0,.7);text-transform:uppercase;animation:bob 2.5s ease-in-out infinite;position:relative;z-index:2;}
 @keyframes bob{0%,100%{transform:translateY(0);opacity:.5;}50%{transform:translateY(8px);opacity:1;}}
 
-/* DIVIDERS */
-.divider{
-  display:flex;align-items:center;gap:1.2rem;
-  padding:0 2rem;max-width:860px;margin:0 auto 3.5rem;
-}
+.divider{display:flex;align-items:center;gap:1.2rem;padding:0 2rem;max-width:860px;margin:0 auto 3.5rem;}
 .div-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(100,0,0,.6),transparent);}
 .div-sym{color:var(--crimson);font-size:1.3rem;text-shadow:0 0 12px var(--blood);}
-
-/* SECTIONS */
 section{max-width:860px;margin:0 auto;padding:4rem 2rem;}
-.sec-title{
-  font-family:'Cinzel',serif;
-  font-size:clamp(.9rem,2.5vw,1.4rem);
-  letter-spacing:.35em;color:var(--crimson);
-  text-align:center;text-transform:uppercase;
-  text-shadow:0 0 18px var(--blood);
-  margin-bottom:2.5rem;
-}
-.sec-title::after{
-  content:'';display:block;width:50px;height:1px;
-  background:var(--blood);margin:.7rem auto 0;
-  box-shadow:0 0 8px var(--blood);
-}
-
-/* PROPHECY LAYOUT */
-.summon-wrap{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:3rem;
-  align-items:center;
-}
+.sec-title{font-family:'Cinzel',serif;font-size:clamp(.9rem,2.5vw,1.4rem);letter-spacing:.35em;color:var(--crimson);
+  text-align:center;text-transform:uppercase;text-shadow:0 0 18px var(--blood);margin-bottom:2.5rem;}
+.sec-title::after{content:'';display:block;width:50px;height:1px;background:var(--blood);margin:.7rem auto 0;box-shadow:0 0 8px var(--blood);}
+.summon-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;}
 @media(max-width:640px){.summon-wrap{grid-template-columns:1fr;}}
-
 .summon-img-side{position:relative;overflow:hidden;}
-.summon-img-side img{
-  width:100%;
-  filter:grayscale(0.6) contrast(1.7) brightness(0.45) sepia(0.5) saturate(0.3);
-  border-left:2px solid rgba(100,0,0,.5);
-  display:block;
-}
-.summon-img-side::after{
-  content:'';position:absolute;inset:0;
-  background:
-    linear-gradient(to right,transparent 70%,#000 100%),
-    radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.6) 100%);
-  pointer-events:none;
-}
+.summon-img-side img{width:100%;filter:grayscale(.6) contrast(1.7) brightness(.45) sepia(.5) saturate(.3);border-left:2px solid rgba(100,0,0,.5);display:block;}
+.summon-img-side::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(to right,transparent 70%,#000 100%),radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.6) 100%);pointer-events:none;}
 .summon-text p{line-height:2;color:var(--bone);margin-bottom:1.2rem;}
-.summon-text p.warning{
-  font-family:'Cinzel',serif;
-  font-size:.75rem;letter-spacing:.2em;
-  color:var(--blood);text-transform:uppercase;
-  border-left:2px solid var(--blood);
-  padding-left:1rem;
-  text-shadow:0 0 10px var(--blood);
-  line-height:1.8;
-}
-
-/* RITUAL STEPS */
+.summon-text p.warning{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.2em;color:var(--blood);text-transform:uppercase;
+  border-left:2px solid var(--blood);padding-left:1rem;text-shadow:0 0 10px var(--blood);line-height:1.8;}
 .steps{display:flex;flex-direction:column;gap:2px;}
-.step{
-  display:grid;grid-template-columns:60px 1fr;
-  gap:1.5rem;align-items:start;
-  padding:1.5rem 1.5rem 1.5rem 0;
-  border-bottom:1px solid rgba(60,0,0,.3);
-  transition:background .3s;
-  position:relative;overflow:hidden;
-}
+.step{display:grid;grid-template-columns:60px 1fr;gap:1.5rem;align-items:start;
+  padding:1.5rem 1.5rem 1.5rem 0;border-bottom:1px solid rgba(60,0,0,.3);transition:background .3s;position:relative;overflow:hidden;}
 .step:hover{background:rgba(30,0,0,.4);}
-.step::before{
-  content:'';
-  position:absolute;left:0;top:0;bottom:0;width:0;
-  background:var(--blood);transition:width .4s ease;
-}
+.step::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:var(--blood);transition:width .4s ease;}
 .step:hover::before{width:2px;}
-.step-num{
-  font-family:'Cinzel',serif;
-  font-size:1.8rem;font-weight:900;
-  color:rgba(80,0,0,.4);
-  display:flex;align-items:center;justify-content:center;
-  line-height:1;
-}
-.step-content strong{
-  display:block;font-family:'Cinzel',serif;
-  font-size:.75rem;letter-spacing:.2em;
-  color:var(--crimson);text-transform:uppercase;margin-bottom:.5rem;
-}
+.step-num{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:900;color:rgba(80,0,0,.4);display:flex;align-items:center;justify-content:center;line-height:1;}
+.step-content strong{display:block;font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.2em;color:var(--crimson);text-transform:uppercase;margin-bottom:.5rem;}
 .step-content p{line-height:1.8;color:var(--bone);}
-
-/* GALLERY */
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:3px;
-  position:relative;
-}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;position:relative;}
 @media(max-width:500px){.gallery{grid-template-columns:1fr;}}
-.gallery::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.8) 100%);
-  z-index:2;pointer-events:none;
-}
+.gallery::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.8) 100%);z-index:2;pointer-events:none;}
 .gal-item{position:relative;overflow:hidden;}
 .gal-item img{width:100%;display:block;transition:filter .5s;}
-.gal-item:nth-child(1) img{filter:grayscale(1) contrast(2) brightness(0.35) sepia(0.3);}
-.gal-item:nth-child(2) img{filter:grayscale(0.8) contrast(1.9) brightness(0.25) sepia(0.7) hue-rotate(-10deg);transform:scaleX(-1);}
-.gal-item:nth-child(3) img{filter:grayscale(1) contrast(2.2) brightness(0.3) invert(0.08);}
-.gal-item:hover img{filter:grayscale(0.4) contrast(1.6) brightness(0.5) sepia(0.4);}
-.gal-item::after{
-  content:'';position:absolute;inset:0;
-  background:
-    repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 3px),
-    radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.6) 100%);
-  pointer-events:none;
-}
-.gal-caption{
-  position:absolute;bottom:0;left:0;right:0;z-index:3;
-  text-align:center;padding:.5rem;
-  font-family:'Cinzel',serif;
-  font-size:.5rem;letter-spacing:.3em;
-  color:rgba(100,0,0,.8);text-transform:uppercase;
-  background:linear-gradient(transparent,rgba(0,0,0,.8));
-  text-shadow:0 0 8px var(--blood);
-}
-
-/* INCANTATION */
-.incantation-block{
-  position:relative;
-  background:
-    radial-gradient(ellipse at center,rgba(30,0,0,.6) 0%,transparent 70%),
-    rgba(5,0,0,.4);
-  border:1px solid rgba(80,0,0,.3);
-  border-top:2px solid var(--blood);
-  border-bottom:2px solid var(--blood);
-  padding:4rem 3rem;
-  text-align:center;
-  overflow:hidden;
-}
-.incantation-block::before{
-  content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 4px,rgba(60,0,0,.05) 4px,rgba(60,0,0,.05) 5px);
-  pointer-events:none;
-}
-.incant-eyebrow{
-  font-family:'Cinzel',serif;
-  font-size:.55rem;letter-spacing:.5em;
-  color:var(--blood);text-transform:uppercase;
-  margin-bottom:2rem;text-shadow:0 0 10px var(--blood);
-}
-.incant-text{
-  font-family:'Uncial Antiqua',cursive;
-  font-size:clamp(1.1rem,2.5vw,1.6rem);
-  line-height:2.3;color:var(--parch);
-  position:relative;z-index:1;
-}
-.incant-text .hl{
-  color:#fff;
-  text-shadow:0 0 15px var(--crimson),0 0 30px var(--blood);
-  animation:txt-pulse 3s ease-in-out infinite;
-}
+.gal-item:nth-child(1) img{filter:grayscale(1) contrast(2) brightness(.35) sepia(.3);}
+.gal-item:nth-child(2) img{filter:grayscale(.8) contrast(1.9) brightness(.25) sepia(.7) hue-rotate(-10deg);transform:scaleX(-1);}
+.gal-item:nth-child(3) img{filter:grayscale(1) contrast(2.2) brightness(.3) invert(.08);}
+.gal-item:hover img{filter:grayscale(.4) contrast(1.6) brightness(.5) sepia(.4);}
+.gal-item::after{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 3px),
+             radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.6) 100%);pointer-events:none;}
+.gal-caption{position:absolute;bottom:0;left:0;right:0;z-index:3;text-align:center;padding:.5rem;
+  font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:rgba(100,0,0,.8);text-transform:uppercase;
+  background:linear-gradient(transparent,rgba(0,0,0,.8));text-shadow:0 0 8px var(--blood);}
+.incantation-block{position:relative;
+  background:radial-gradient(ellipse at center,rgba(30,0,0,.6) 0%,transparent 70%),rgba(5,0,0,.4);
+  border:1px solid rgba(80,0,0,.3);border-top:2px solid var(--blood);border-bottom:2px solid var(--blood);
+  padding:4rem 3rem;text-align:center;overflow:hidden;}
+.incantation-block::before{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 4px,rgba(60,0,0,.05) 4px,rgba(60,0,0,.05) 5px);pointer-events:none;}
+.incant-eyebrow{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.5em;color:var(--blood);text-transform:uppercase;margin-bottom:2rem;text-shadow:0 0 10px var(--blood);}
+.incant-text{font-family:'Uncial Antiqua',cursive;font-size:clamp(1.1rem,2.5vw,1.6rem);line-height:2.3;color:var(--parch);position:relative;z-index:1;}
+.incant-text .hl{color:#fff;text-shadow:0 0 15px var(--crimson),0 0 30px var(--blood);animation:txt-pulse 3s ease-in-out infinite;}
 @keyframes txt-pulse{0%,100%{text-shadow:0 0 15px var(--crimson),0 0 30px var(--blood);}50%{text-shadow:0 0 25px var(--crimson),0 0 60px var(--blood),0 0 80px rgba(150,0,0,.4);}}
-.incant-latin{
-  display:inline-block;
-  margin-top:2.5rem;
-  font-family:'Cinzel',serif;
-  font-size:.65rem;letter-spacing:.3em;
-  color:var(--blood);text-transform:uppercase;
-  border:1px solid rgba(80,0,0,.4);
-  padding:.8rem 2rem;
-  text-shadow:0 0 8px var(--blood);
-  animation:flicker 8s infinite;
-}
-
-/* COMMANDMENTS */
+.incant-latin{display:inline-block;margin-top:2.5rem;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.3em;
+  color:var(--blood);text-transform:uppercase;border:1px solid rgba(80,0,0,.4);padding:.8rem 2rem;text-shadow:0 0 8px var(--blood);animation:flicker 8s infinite;}
 .commandments{list-style:none;display:flex;flex-direction:column;gap:1px;}
-.commandments li{
-  display:grid;grid-template-columns:90px 1fr;
-  gap:1.5rem;align-items:start;
-  padding:1.3rem 1.5rem;
-  background:rgba(8,0,0,.5);
-  border-left:1px solid rgba(60,0,0,.3);
-  transition:all .35s;
-}
-.commandments li:hover{
-  background:rgba(25,0,0,.7);
-  border-left-color:var(--blood);
-}
-.cmd-num{
-  font-family:'Cinzel',serif;
-  font-size:.7rem;letter-spacing:.1em;
-  color:var(--blood);
-  line-height:1.8;
-  text-shadow:0 0 8px var(--blood);
-  padding-top:.2rem;
-}
+.commandments li{display:grid;grid-template-columns:90px 1fr;gap:1.5rem;align-items:start;
+  padding:1.3rem 1.5rem;background:rgba(8,0,0,.5);border-left:1px solid rgba(60,0,0,.3);transition:all .35s;}
+.commandments li:hover{background:rgba(25,0,0,.7);border-left-color:var(--blood);}
+.cmd-num{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.1em;color:var(--blood);line-height:1.8;text-shadow:0 0 8px var(--blood);padding-top:.2rem;}
 .commandments li p{line-height:1.9;color:var(--bone);}
-
-/* OFFERINGS */
-.offerings{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:1px;
-}
-.offering{
-  padding:2rem 1.5rem;
-  background:rgba(8,0,0,.5);
-  border:1px solid rgba(30,0,0,.6);
-  transition:background .3s;position:relative;overflow:hidden;
-}
+.offerings{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;}
+.offering{padding:2rem 1.5rem;background:rgba(8,0,0,.5);border:1px solid rgba(30,0,0,.6);transition:background .3s;position:relative;overflow:hidden;}
 .offering:hover{background:rgba(20,0,0,.8);}
 .offering-icon{font-size:1.5rem;display:block;margin-bottom:1rem;opacity:.5;filter:grayscale(1);}
-.offering strong{
-  display:block;font-family:'Cinzel',serif;
-  font-size:.65rem;letter-spacing:.2em;
-  color:var(--crimson);text-transform:uppercase;margin-bottom:.5rem;
-}
+.offering strong{display:block;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;color:var(--crimson);text-transform:uppercase;margin-bottom:.5rem;}
 .offering p{font-size:.85rem;line-height:1.7;color:var(--dim);}
-.offering::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(to right,transparent,var(--blood),transparent);
-  box-shadow:0 0 8px var(--blood);
-  opacity:0;transition:opacity .3s;
-}
+.offering::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,var(--blood),transparent);box-shadow:0 0 8px var(--blood);opacity:0;transition:opacity .3s;}
 .offering:hover::after{opacity:1;}
-
-/* SUMMON BUTTON */
-.summon-section{
-  text-align:center;
-  padding:5rem 2rem;
-  background:
-    radial-gradient(ellipse at center,rgba(40,0,0,.5) 0%,transparent 70%),
-    #000;
-  position:relative;overflow:hidden;
-}
-.summon-section::before{
-  content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(40,0,0,.07) 3px,rgba(40,0,0,.07) 4px);
-  pointer-events:none;
-}
-.summon-bg-victor{
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:300px;opacity:.06;
-  filter:grayscale(1) contrast(2) sepia(1);
-  pointer-events:none;
-}
-.summon-pre{
-  font-family:'Cinzel',serif;
-  font-size:.6rem;letter-spacing:.5em;
-  color:rgba(80,0,0,.7);text-transform:uppercase;
-  margin-bottom:2.5rem;animation:flicker 6s infinite;
-  position:relative;z-index:2;
-}
-.summon-btn{
-  display:inline-block;
-  font-family:'Cinzel',serif;
-  font-weight:900;
-  font-size:clamp(.7rem,1.8vw,1rem);
-  letter-spacing:.4em;
-  text-transform:uppercase;
-  color:#0a0000;
-  background:linear-gradient(135deg,#8a0000,#4a0000,#7a0000);
-  padding:1.3rem 4rem;
-  border:none;cursor:pointer;
+.summon-section{text-align:center;padding:5rem 2rem;
+  background:radial-gradient(ellipse at center,rgba(40,0,0,.5) 0%,transparent 70%),#000;
+  position:relative;overflow:hidden;}
+.summon-section::before{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(40,0,0,.07) 3px,rgba(40,0,0,.07) 4px);pointer-events:none;}
+.summon-bg-victor{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;opacity:.06;
+  filter:grayscale(1) contrast(2) sepia(1);pointer-events:none;}
+.summon-pre{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.5em;color:rgba(80,0,0,.7);text-transform:uppercase;margin-bottom:2.5rem;animation:flicker 6s infinite;position:relative;z-index:2;}
+.summon-btn{display:inline-block;font-family:'Cinzel',serif;font-weight:900;font-size:clamp(.7rem,1.8vw,1rem);letter-spacing:.4em;text-transform:uppercase;
+  color:#0a0000;background:linear-gradient(135deg,#8a0000,#4a0000,#7a0000);padding:1.3rem 4rem;border:none;cursor:pointer;
   position:relative;overflow:hidden;z-index:2;
   box-shadow:0 0 30px rgba(100,0,0,.5),inset 0 0 20px rgba(0,0,0,.4);
   clip-path:polygon(8px 0%,calc(100% - 8px) 0%,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0% calc(100% - 8px),0% 8px);
-  transition:all .3s;
-}
-.summon-btn::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,transparent,rgba(255,255,255,.08),transparent);
-  transform:translateX(-100%);transition:transform .5s ease;
-}
+  transition:all .3s;}
+.summon-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(-100%);transition:transform .5s ease;}
 .summon-btn:hover::after{transform:translateX(100%);}
-.summon-btn:hover{
-  color:#fff;
-  box-shadow:0 0 60px rgba(150,0,0,.7),0 0 120px rgba(80,0,0,.4),inset 0 0 20px rgba(0,0,0,.4);
-  text-shadow:0 0 10px rgba(255,100,100,.5);
-}
-.summon-warning{
-  margin-top:2rem;
-  font-family:'Cinzel',serif;
-  font-size:.5rem;letter-spacing:.2em;
-  color:rgba(60,0,0,.6);text-transform:uppercase;
-  max-width:400px;margin-left:auto;margin-right:auto;
-  line-height:2;position:relative;z-index:2;
-}
+.summon-btn:hover{color:#fff;box-shadow:0 0 60px rgba(150,0,0,.7),0 0 120px rgba(80,0,0,.4),inset 0 0 20px rgba(0,0,0,.4);text-shadow:0 0 10px rgba(255,100,100,.5);}
+.summon-warning{margin-top:2rem;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.2em;color:rgba(60,0,0,.6);text-transform:uppercase;
+  max-width:400px;margin-left:auto;margin-right:auto;line-height:2;position:relative;z-index:2;}
 
-/* MODAL */
-#ritual-modal{
-  display:none;
-  position:fixed;inset:0;z-index:99999;
-  background:rgba(0,0,0,0);
-  align-items:center;justify-content:center;
-  flex-direction:column;
-}
-#ritual-modal.open{
-  display:flex;
-  animation:modal-in .8s ease forwards;
-}
+/* ══ ETCHED TOOLTIPS — hover clues embedded in lore text ══ */
+.etched{display:inline;position:relative;color:inherit;
+  border-bottom:1px dotted rgba(80,0,0,.25);cursor:help;}
+.etched::after{content:attr(data-etch);position:absolute;bottom:calc(100% + 6px);left:0;
+  font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.18em;
+  color:rgba(120,50,30,.75);background:rgba(0,0,0,.97);padding:.25rem .6rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;z-index:200;
+  border:1px solid rgba(60,0,0,.3);}
+.etched:hover::after{opacity:1;}
+
+/* ══ PUZZLE SECTION ══ */
+#puzzle-section{max-width:860px;margin:0 auto;padding:4rem 2rem;}
+
+#puzzle-gate{text-align:center;padding:3rem 2.5rem;border:1px solid rgba(50,0,0,.4);
+  background:rgba(4,0,0,.75);position:relative;}
+#puzzle-gate::before{content:'⚠ INITIATES ONLY ⚠';position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  font-family:'Cinzel',serif;font-size:.45rem;letter-spacing:.35em;color:var(--crimson);
+  background:#000;padding:0 1rem;white-space:nowrap;}
+#puzzle-gate h3{font-family:'Cinzel',serif;font-size:clamp(.85rem,2.2vw,1.15rem);letter-spacing:.3em;
+  color:var(--crimson);margin-bottom:1.5rem;text-transform:uppercase;text-shadow:0 0 12px var(--blood);}
+#puzzle-gate p{font-size:.88rem;line-height:2;color:var(--dim);margin-bottom:2rem;}
+.gate-btn{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;
+  background:transparent;border:1px solid rgba(80,0,0,.6);color:rgba(120,0,0,.8);padding:.9rem 2.5rem;cursor:pointer;transition:all .3s;}
+.gate-btn:hover{border-color:var(--crimson);color:var(--crimson);box-shadow:0 0 14px rgba(80,0,0,.3);}
+
+#puzzle-board{display:none;}
+.puzzle-header{text-align:center;margin-bottom:2.5rem;}
+.puzzle-header > p{font-size:.8rem;line-height:1.9;color:var(--dim);font-style:italic;margin-bottom:1.5rem;}
+.puzzle-progress{display:flex;justify-content:center;gap:8px;margin-bottom:.5rem;}
+.pip{width:30px;height:4px;background:rgba(40,0,0,.6);transition:background .5s,box-shadow .5s;}
+.pip.done{background:var(--crimson);box-shadow:0 0 8px var(--blood);}
+.pip.active{background:rgba(120,0,0,.5);animation:pip-pulse 1.5s ease-in-out infinite;}
+@keyframes pip-pulse{0%,100%{background:rgba(100,0,0,.4);}50%{background:rgba(160,0,0,.9);}}
+
+.pcard{display:none;border:1px solid rgba(60,0,0,.35);border-top:2px solid rgba(100,0,0,.55);
+  background:rgba(5,0,0,.65);padding:2.5rem;position:relative;overflow:hidden;}
+.pcard.active-card{display:block;animation:card-in .5s ease both;}
+@keyframes card-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.pcard::before{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 4px,rgba(40,0,0,.04) 4px,rgba(40,0,0,.04) 5px);pointer-events:none;}
+.pcard-num{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.4em;color:rgba(80,0,0,.5);text-transform:uppercase;margin-bottom:.7rem;}
+.pcard-title{font-family:'Cinzel',serif;font-size:clamp(.88rem,2.3vw,1.18rem);letter-spacing:.22em;
+  color:var(--crimson);text-transform:uppercase;text-shadow:0 0 12px var(--blood);margin-bottom:1.5rem;}
+.pcard-body{font-size:.95rem;line-height:2.05;color:var(--bone);margin-bottom:1.8rem;position:relative;z-index:1;}
+.pcard-body .clue-ref{color:var(--parch);font-style:italic;}
+
+/* Hint accordion */
+.hint-system{margin-bottom:1.8rem;position:relative;z-index:1;}
+.hint-toggle{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;
+  background:transparent;border:none;color:rgba(65,0,0,.65);cursor:pointer;padding:.3rem 0;
+  transition:color .3s;display:flex;align-items:center;gap:.5rem;}
+.hint-toggle:hover{color:rgba(120,0,0,.85);}
+.hint-arrow{font-size:.7rem;transition:transform .3s;display:inline-block;}
+.hint-toggle.open .hint-arrow{transform:rotate(90deg);}
+.hints-box{display:none;margin-top:.9rem;border-left:2px solid rgba(60,0,0,.4);padding-left:1.2rem;}
+.hints-box.visible{display:block;}
+.hint-row{padding:.55rem 0;border-bottom:1px solid rgba(25,0,0,.4);}
+.hint-row:last-child{border-bottom:none;}
+.hint-text{font-size:.8rem;line-height:1.85;color:rgba(145,75,55,.8);font-style:italic;}
+.hint-locked{font-size:.72rem;color:rgba(50,15,15,.6);font-family:'Cinzel',serif;letter-spacing:.14em;
+  text-transform:uppercase;cursor:pointer;padding:.4rem 0;transition:color .3s;display:flex;align-items:center;gap:.4rem;}
+.hint-locked:hover{color:rgba(100,35,35,.85);}
+.hint-locked::before{content:'▸';}
+
+/* Answer */
+.answer-area{display:flex;flex-direction:column;gap:.8rem;position:relative;z-index:1;}
+.puzzle-input{background:rgba(0,0,0,.85);border:1px solid rgba(60,0,0,.5);color:var(--bone);
+  font-family:'Special Elite',cursive;font-size:1rem;padding:.7rem 1.1rem;width:100%;max-width:340px;
+  outline:none;transition:border-color .3s,box-shadow .3s;letter-spacing:.05em;}
+.puzzle-input:focus{border-color:var(--crimson);box-shadow:0 0 12px rgba(80,0,0,.3);}
+.puzzle-input.wrong{animation:shake .4s ease;border-color:#4a0000;background:rgba(15,0,0,.9);}
+.puzzle-input.correct{border-color:rgba(60,80,0,.8);}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}45%{transform:translateX(7px);}65%{transform:translateX(-5px);}85%{transform:translateX(3px);}}
+.submit-btn{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.26em;text-transform:uppercase;
+  background:transparent;border:1px solid rgba(80,0,0,.5);color:rgba(110,0,0,.8);
+  padding:.7rem 2.2rem;cursor:pointer;transition:all .3s;align-self:flex-start;}
+.submit-btn:hover{border-color:var(--crimson);color:var(--crimson);box-shadow:0 0 12px rgba(80,0,0,.3);}
+.answer-feedback{min-height:1.5em;font-size:.82rem;line-height:1.8;color:rgba(100,0,0,.65);font-style:italic;}
+.answer-feedback.correct-fb{color:rgba(80,130,30,.75);}
+
+/* MODALS */
+#ritual-modal{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0);align-items:center;justify-content:center;flex-direction:column;}
+#ritual-modal.open{display:flex;animation:modal-in .8s ease forwards;}
 @keyframes modal-in{0%{background:rgba(0,0,0,0);}100%{background:rgba(0,0,0,.97);}}
-.modal-inner{
-  text-align:center;max-width:600px;padding:3rem 2rem;
-  animation:modal-content-in 1s .3s ease both;
-  position:relative;
-}
+.modal-inner{text-align:center;max-width:600px;padding:3rem 2rem;animation:modal-content-in 1s .3s ease both;position:relative;}
 @keyframes modal-content-in{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-.modal-victor{
-  width:180px;display:block;margin:0 auto 2rem;
-  filter:grayscale(0.8) contrast(2) brightness(0.4) sepia(0.5);
-  border-radius:50%;
-  box-shadow:0 0 60px rgba(100,0,0,.6),0 0 120px rgba(60,0,0,.4);
-  animation:img-breathe 4s ease-in-out infinite;
-}
-.modal-inner h2{
-  font-family:'Cinzel',serif;font-weight:900;
-  font-size:clamp(1.5rem,4vw,2.8rem);color:#aaa;
-  text-shadow:0 0 20px var(--crimson),0 0 50px var(--blood);
-  margin-bottom:1.5rem;animation:pulse-glow 4s ease-in-out infinite;
-}
+.modal-victor{width:180px;display:block;margin:0 auto 2rem;filter:grayscale(.8) contrast(2) brightness(.4) sepia(.5);border-radius:50%;
+  box-shadow:0 0 60px rgba(100,0,0,.6),0 0 120px rgba(60,0,0,.4);animation:img-breathe 4s ease-in-out infinite;}
+.modal-inner h2{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(1.5rem,4vw,2.8rem);color:#aaa;
+  text-shadow:0 0 20px var(--crimson),0 0 50px var(--blood);margin-bottom:1.5rem;animation:pulse-glow 4s ease-in-out infinite;}
 .modal-inner p{font-size:1rem;line-height:2;color:var(--bone);margin-bottom:2rem;font-style:italic;}
-.modal-close{
-  font-family:'Cinzel',serif;
-  font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;
-  background:transparent;border:1px solid rgba(80,0,0,.5);
-  color:rgba(80,0,0,.7);padding:.8rem 2.5rem;cursor:pointer;transition:all .3s;
-}
+.modal-close{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;
+  background:transparent;border:1px solid rgba(80,0,0,.5);color:rgba(80,0,0,.7);padding:.8rem 2.5rem;cursor:pointer;transition:all .3s;}
 .modal-close:hover{border-color:var(--blood);color:var(--blood);box-shadow:0 0 15px rgba(100,0,0,.3);}
 
-/* FOOTER */
-footer{
-  text-align:center;
-  padding:3rem 2rem 4rem;
-  border-top:1px solid rgba(40,0,0,.5);
-  font-family:'Cinzel',serif;font-size:.5rem;
-  letter-spacing:.3em;color:rgba(60,0,0,.5);
-  text-transform:uppercase;line-height:2.5;position:relative;
-}
-footer img{
-  width:60px;display:block;margin:0 auto 1.5rem;
-  filter:grayscale(1) contrast(2) brightness(0.25) sepia(0.4);
-  opacity:.4;border-radius:50%;
-}
+#reward-modal{display:none;position:fixed;inset:0;z-index:199999;background:rgba(0,0,0,.98);align-items:center;justify-content:center;overflow-y:auto;padding:2rem;}
+#reward-modal.open{display:flex;animation:modal-in .6s ease forwards;}
+.reward-inner{text-align:center;max-width:660px;padding:3rem 2rem;animation:modal-content-in .8s .2s ease both;width:100%;}
+.reward-title{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(1.2rem,4vw,2.5rem);color:#c0c0c0;
+  text-shadow:0 0 20px var(--crimson),0 0 50px var(--blood);margin-bottom:1.5rem;animation:pulse-glow 4s ease-in-out infinite;}
+.reward-secret{background:rgba(20,0,0,.75);border:1px solid rgba(100,0,0,.4);border-top:2px solid var(--crimson);padding:2.5rem;margin:2rem 0;position:relative;}
+.reward-secret::before{content:'CLASSIFIED · FOR THE INITIATED ONLY';position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  font-family:'Cinzel',serif;font-size:.45rem;letter-spacing:.3em;color:var(--crimson);text-transform:uppercase;
+  background:rgba(10,0,0,1);padding:0 .8rem;white-space:nowrap;}
+.reward-secret p{font-family:'Uncial Antiqua',cursive;font-size:clamp(.88rem,1.9vw,1.12rem);line-height:2.3;color:var(--parch);}
+.reward-secret .reward-hl{color:#fff;text-shadow:0 0 20px var(--crimson),0 0 40px var(--blood);display:block;margin:.5rem 0;}
+.reward-victor{width:120px;display:block;margin:0 auto 1.5rem;border-radius:50%;
+  filter:grayscale(0) contrast(1.4) brightness(.7) sepia(.3);
+  box-shadow:0 0 40px rgba(100,0,0,.7),0 0 80px rgba(60,0,0,.4);animation:cglow 4s ease-in-out infinite;}
+.reward-close{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;
+  background:transparent;border:1px solid rgba(80,0,0,.5);color:rgba(80,0,0,.7);padding:.8rem 2.5rem;cursor:pointer;transition:all .3s;margin-top:1rem;}
+.reward-close:hover{border-color:var(--crimson);color:var(--crimson);box-shadow:0 0 15px rgba(100,0,0,.3);}
 
+footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(40,0,0,.5);
+  font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:rgba(60,0,0,.5);text-transform:uppercase;line-height:2.5;}
+footer img{width:60px;display:block;margin:0 auto 1.5rem;filter:grayscale(1) contrast(2) brightness(.25) sepia(.4);opacity:.4;border-radius:50%;}
 .red{color:var(--crimson);text-shadow:0 0 8px var(--blood);}
 em{font-style:italic;}
 </style>
 </head>
 <body>
 
+<canvas id="ash-canvas"></canvas>
+
 <!-- HERO -->
 <div class="hero">
-  <svg class="penta-bg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg class="penta-bg" viewBox="0 0 400 400" fill="none">
     <polygon points="200,20 380,320 30,130 370,130 20,320" stroke="#ff0000" stroke-width="1.5" fill="none"/>
     <circle cx="200" cy="200" r="190" stroke="#ff0000" stroke-width="1" fill="none"/>
     <circle cx="200" cy="200" r="160" stroke="#880000" stroke-width=".5" fill="none"/>
   </svg>
   <div class="embers" id="embers"></div>
   <div class="blood-pool"></div>
-
   <p class="open-eyebrow">✦ &nbsp; He watches. He judges. He has always been here. &nbsp; ✦</p>
   <h1 class="hero-title">VÍCTOR</h1>
   <p class="hero-sub">The Ancient One &nbsp;·&nbsp; The Unblinking &nbsp;·&nbsp; The Eternal Gato</p>
-
   <div class="ritual-circle">
     <div class="ritual-circle-glow"></div>
-    <svg class="circle-ring" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="circle-ring" viewBox="0 0 300 300" fill="none">
       <circle cx="150" cy="150" r="145" stroke="#550000" stroke-width=".8" stroke-dasharray="6 5"/>
       <circle cx="150" cy="150" r="135" stroke="#330000" stroke-width=".5" stroke-dasharray="2 8"/>
       <text font-family="serif" font-size="11" fill="#660000" opacity=".9">
@@ -614,12 +326,11 @@ em{font-style:italic;}
     <span class="rune rune-bl">ᛊ</span>
     <span class="rune rune-br">ᚱ</span>
   </div>
-
   <p class="scroll-lure">▼ &nbsp; do not look away &nbsp; ▼</p>
 </div>
 
 
-<!-- PROPHECY -->
+<!-- ORIGIN — clue for P1 (NINE) and P3 (GREY) embedded as etched tooltips -->
 <section>
   <div class="divider"><div class="div-line"></div><span class="div-sym">☽</span><div class="div-line"></div></div>
   <h2 class="sec-title">The Origin of the Dark One</h2>
@@ -628,15 +339,22 @@ em{font-style:italic;}
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9cy2OVQCGznHOsnUOSS2sn4RowrTPGorDGg&s" alt="Victor"/>
     </div>
     <div class="summon-text">
-      <p>Before the first city was built, before language corrupted the minds of men, <span class="red">He</span> existed. Grey as ash. Still as stone. His eyes — two voids carved from something older than darkness itself.</p>
+      <p>Before the first city was built, before language corrupted the minds of men, <span class="red">He</span> existed.
+        <span class="etched" data-etch="the colour of what remains after fire">Grey as ash.</span>
+        Still as stone. His eyes — two voids carved from something older than darkness itself.</p>
       <p>He does not come from this world. He came <em>through</em> it. Through a crack in the veil between the living and the unnameable, He slipped in. Disguised as a common house cat. His name is <span class="red">VÍCTOR</span>. It is both a warning and a verdict.</p>
-      <p class="warning">⚠ Do not attempt to pet Him. Do not maintain direct eye contact for longer than 4 seconds. Do not ask what He wants. He will never tell you. He already has it.</p>
+      <p>He arrived on the third day of the third month of a year that has since been redacted. He has not moved from the windowsill since. He is still
+        <span class="etched" data-etch="this age — count the lives a cat is said to have">nine years old.</span>
+        He has always been nine years old.</p>
+      <p class="warning">⚠ Do not attempt to pet Him. Do not maintain direct eye contact for longer than
+        <span class="etched" data-etch="four seconds — one fewer than His lives">4 seconds.</span>
+        Do not ask what He wants. He will never tell you. He already has it.</p>
     </div>
   </div>
 </section>
 
 
-<!-- RITUAL STEPS -->
+<!-- RITUAL STEPS — clue for P2 (SEVEN) and P4 (COUNTER-CLOCKWISE) -->
 <section>
   <div class="divider"><div class="div-line"></div><span class="div-sym">✦</span><div class="div-line"></div></div>
   <h2 class="sec-title">The Ritual of Summoning</h2>
@@ -659,7 +377,12 @@ em{font-style:italic;}
       <div class="step-num">III</div>
       <div class="step-content">
         <strong>Print His Image</strong>
-        <p>Print a photograph of Víctor. Place it face-up in the center of the circle. Surround it with seven unlit black candles. Light them counter-clockwise. Do not blink as the last candle catches. This is when He begins to see you.</p>
+        <!-- P2 clue: SEVEN candles. P4 clue: counter-clockwise -->
+        <p>Print a photograph of Víctor. Place it face-up in the center of the circle. Surround it with
+          <span class="etched" data-etch="VII — a number that will matter later">seven unlit black candles.</span>
+          Light them
+          <span class="etched" data-etch="opposite of how a clock moves — write this word down">counter-clockwise.</span>
+          Do not blink as the last candle catches. This is when He begins to see you.</p>
       </div>
     </div>
     <div class="step">
@@ -701,7 +424,7 @@ em{font-style:italic;}
 </section>
 
 
-<!-- INCANTATION -->
+<!-- INCANTATION — clue for P3 (WANTING) — the glowing word -->
 <section style="padding:0 0 5rem;">
   <div class="divider"><div class="div-line"></div><span class="div-sym">☾</span><div class="div-line"></div></div>
   <div class="incantation-block">
@@ -714,7 +437,7 @@ em{font-style:italic;}
       The One Who Knocks Things Off Tables<br>
       not by accident — but by <span class="hl">choice</span>.<br><br>
       Let His cold gaze fall upon me.<br>
-      Let me be found <span class="hl">wanting</span>.<br>
+      Let me be found <span class="hl">wanting</span>.<br><!-- P3 answer -->
       As I have always been.<br>
       As He has always known.
     </p>
@@ -723,7 +446,7 @@ em{font-style:italic;}
 </section>
 
 
-<!-- COMMANDMENTS -->
+<!-- COMMANDMENTS — clue for P5 (STARE) in SEPTIMUS -->
 <section>
   <div class="divider"><div class="div-line"></div><span class="div-sym">✦</span><div class="div-line"></div></div>
   <h2 class="sec-title">The Dark Commandments</h2>
@@ -734,12 +457,15 @@ em{font-style:italic;}
     <li><span class="cmd-num">QUARTUS</span><p>Thou shalt not attempt to make Him smile. If a smile occurs — and it has not — it means something terrible is about to happen to you specifically.</p></li>
     <li><span class="cmd-num">QUINTUS</span><p>If He sits upon thy possessions, they now belong to Him. If He sits upon thy chest at 3am, this is not affection. This is assessment.</p></li>
     <li><span class="cmd-num">SEXTUS</span><p>Thou shalt place His image above thy doorframe as warding. Demons fear Him. Not because He is holy — but because He judges them, and they too are found insufficient.</p></li>
-    <li><span class="cmd-num">SEPTIMUS</span><p>When in doubt, ask thyself: <em>what would Víctor do?</em> He would stare at the problem until it felt bad about itself. Then he would leave the room. So shall you.</p></li>
+    <li><span class="cmd-num">SEPTIMUS</span>
+      <p>When in doubt, ask thyself: <em>what would Víctor do?</em> He would
+        <span class="etched" data-etch="this is the verb — what He does to every problem, every person, every wall">stare</span>
+        at the problem until it felt bad about itself. Then he would leave the room. So shall you.</p></li>
   </ul>
 </section>
 
 
-<!-- OFFERINGS -->
+<!-- OFFERINGS — clue for P1 (NINE) confirmed again, P2 (SEVEN) confirmed again, P4 (SALMON) -->
 <section>
   <div class="divider"><div class="div-line"></div><span class="div-sym">☽</span><div class="div-line"></div></div>
   <h2 class="sec-title">Acceptable Offerings</h2>
@@ -752,7 +478,7 @@ em{font-style:italic;}
     <div class="offering">
       <span class="offering-icon">🕯️</span>
       <strong>Black Candles</strong>
-      <p>Seven. Unscented. He does not appreciate lavender. He does not appreciate you asking why.</p>
+      <p><span class="etched" data-etch="VII — the same number from Ritual Step III">Seven.</span> Unscented. He does not appreciate lavender. He does not appreciate you asking why.</p>
     </div>
     <div class="offering">
       <span class="offering-icon">🫀</span>
@@ -767,32 +493,220 @@ em{font-style:italic;}
     <div class="offering">
       <span class="offering-icon">🌑</span>
       <strong>The Hours 3–4am</strong>
+      <!-- NINE: a cat has nine lives, he is nine years old — P1 confirmation -->
       <p>Stay awake. Do not use your phone. Sit in the dark. If you hear purring — that is not purring.</p>
     </div>
     <div class="offering">
       <span class="offering-icon">🥩</span>
       <strong>Premium Wet Food</strong>
-      <p>Salmon. Pâté, not chunks. He will inspect the can. He will know if you considered the cheap brand.</p>
+      <!-- P4 answer: SALMON — stated outright -->
+      <p><span class="etched" data-etch="the sacred fish — one word — begins with S">Salmon.</span> Pâté, not chunks. He will inspect the can. He will know if you considered the cheap brand.</p>
     </div>
   </div>
 </section>
+
+
+<!-- ═══════════════════════════════════════
+     THE FORBIDDEN TRIAL
+     
+     ANSWERS (all findable in page above):
+     P1: NINE  — "nine years old" (Origin), lives a cat has (9), eye contact limit is 4 = one less than 5 which is half of... no. Answer is simply NINE: his age, stated twice in Origin. "He is still nine years old. He has always been nine years old."
+     P2: SEVEN — candles in Ritual Step III + "Seven." in Offerings
+     P3: WANTING — glowing word in Incantation, "Let me be found wanting."
+     P4: COUNTER-CLOCKWISE — Ritual Step III: "Light them counter-clockwise."
+     P5: STARE — SEPTIMUS commandment: "He would stare at the problem..."
+═══════════════════════════════════════════ -->
+
+<div id="puzzle-section">
+  <div class="divider"><div class="div-line"></div><span class="div-sym">⚷</span><div class="div-line"></div></div>
+  <h2 class="sec-title" style="color:rgba(110,0,0,.8);text-shadow:0 0 16px rgba(50,0,0,.7);">The Forbidden Trial</h2>
+
+  <div id="puzzle-gate">
+    <h3>A Cipher Has Been Left Within This Page</h3>
+    <p>
+      Every answer exists somewhere in the lore above. Read carefully.<br>
+      <em>Hover over <span style="border-bottom:1px dotted rgba(120,60,30,.5);color:var(--parch);">dotted-underlined phrases</span> for whispered guidance from the text itself.</em><br><br>
+      He hid the clues himself. In plain sight.<br>
+      He is certain you will miss them.
+    </p>
+    <button class="gate-btn" onclick="openPuzzle()">I am prepared to be found wanting</button>
+  </div>
+
+  <div id="puzzle-board">
+    <div class="puzzle-header">
+      <p>Five trials. All answers live somewhere above you. Scroll, read, hover. Look at what glows.</p>
+      <div class="puzzle-progress">
+        <div class="pip active" id="pip-1"></div>
+        <div class="pip" id="pip-2"></div>
+        <div class="pip" id="pip-3"></div>
+        <div class="pip" id="pip-4"></div>
+        <div class="pip" id="pip-5"></div>
+      </div>
+    </div>
+
+    <!-- ── P1: NINE ── -->
+    <div class="pcard active-card" id="pcard-1">
+      <div class="pcard-num">Trial I of V</div>
+      <div class="pcard-title">His Age, Which Does Not Change</div>
+      <div class="pcard-body">
+        <p>Víctor arrived in this world — or slipped through into it — at an age that has remained constant ever since. The <span class="clue-ref">Origin section</span> states it plainly, then states it again, as if the repetition is its own kind of warning.</p>
+        <p>This age also happens to equal the number of lives a cat is commonly believed to possess. He does not consider this a coincidence. He considers it a credential.</p>
+        <p>How old is He? How old has He always been?</p>
+      </div>
+      <div class="hint-system">
+        <button class="hint-toggle" id="ht-1" onclick="toggleHints(1)">
+          <span class="hint-arrow">▶</span> Request guidance &nbsp;<span style="font-size:.48rem;color:rgba(55,0,0,.5);">(he disapproves but permits it)</span>
+        </button>
+        <div class="hints-box" id="hints-1">
+          <div class="hint-row">
+            <div class="hint-text">First Guidance — Scroll to "The Origin of the Dark One." In the third paragraph, a number is mentioned twice in immediate succession. That number is the answer. Write it as a word.</div>
+          </div>
+          <div class="hint-row">
+            <div class="hint-locked" id="hl-1-2" onclick="unlockHint('h-1-2','hl-1-2')">Reveal deeper guidance</div>
+            <div class="hint-text" id="h-1-2" style="display:none;">Second Guidance — The sentence reads: "He is still nine years old. He has always been nine years old." The answer is the word NINE. A cat has nine lives. He has been this age since before you were a concern to anyone.</div>
+          </div>
+        </div>
+      </div>
+      <div class="answer-area">
+        <input class="puzzle-input" id="pi-1" type="text" placeholder="his eternal age..." autocomplete="off" spellcheck="false"/>
+        <button class="submit-btn" onclick="checkP(1)">Submit to His Judgment</button>
+        <div class="answer-feedback" id="pf-1"></div>
+      </div>
+    </div>
+
+    <!-- ── P2: SEVEN ── -->
+    <div class="pcard" id="pcard-2">
+      <div class="pcard-num">Trial II of V</div>
+      <div class="pcard-title">The Ritual Number of Fire</div>
+      <div class="pcard-body">
+        <p>One number echoes through His rituals like a name that cannot be unsaid. It appears in <span class="clue-ref">Ritual Step III</span>, specifying exactly how many candles must surround His image. Then it appears again in the <span class="clue-ref">Offerings section</span>, as a single word followed by a full stop.</p>
+        <p>This number is also how many commandments He has issued. Count PRIMUS through SEPTIMUS, and you will find it.</p>
+        <p>What is the number?</p>
+      </div>
+      <div class="hint-system">
+        <button class="hint-toggle" id="ht-2" onclick="toggleHints(2)">
+          <span class="hint-arrow">▶</span> Request guidance
+        </button>
+        <div class="hints-box" id="hints-2">
+          <div class="hint-row">
+            <div class="hint-text">First Guidance — In Ritual Step III ("Print His Image"), the word "seven" appears before the phrase "unlit black candles." The same word appears in the Offerings section under "Black Candles," as its very first word. Both confirm the number.</div>
+          </div>
+          <div class="hint-row">
+            <div class="hint-locked" id="hl-2-2" onclick="unlockHint('h-2-2','hl-2-2')">Reveal deeper guidance</div>
+            <div class="hint-text" id="h-2-2" style="display:none;">Second Guidance — The answer is SEVEN (or 7). Seven candles. Seven offerings. Seven commandments (PRIMUS to SEPTIMUS). You may hover over the dotted underline on "seven unlit black candles" in Step III for confirmation.</div>
+          </div>
+        </div>
+      </div>
+      <div class="answer-area">
+        <input class="puzzle-input" id="pi-2" type="text" placeholder="the ritual number..." autocomplete="off" spellcheck="false"/>
+        <button class="submit-btn" onclick="checkP(2)">Submit to His Judgment</button>
+        <div class="answer-feedback" id="pf-2"></div>
+      </div>
+    </div>
+
+    <!-- ── P3: WANTING ── -->
+    <div class="pcard" id="pcard-3">
+      <div class="pcard-num">Trial III of V</div>
+      <div class="pcard-title">What He Finds You</div>
+      <div class="pcard-body">
+        <p>In the Incantation — the text that must be recited three times at midnight — there are three words that glow brighter than all others. They burn white. They have a red halo. These are His words.</p>
+        <p>The first glowing word is His name. The second is the manner of His action. The third — the final one — is His verdict on you, personally, after assessment.</p>
+        <p>What is that last glowing word? What does He determine that you are?</p>
+      </div>
+      <div class="hint-system">
+        <button class="hint-toggle" id="ht-3" onclick="toggleHints(3)">
+          <span class="hint-arrow">▶</span> Request guidance
+        </button>
+        <div class="hints-box" id="hints-3">
+          <div class="hint-row">
+            <div class="hint-text">First Guidance — Scroll to the Incantation section. Three words glow in white with a red aura. They are: "Víctor," "choice," and one more. That final glowing word completes the line: "Let me be found ___."</div>
+          </div>
+          <div class="hint-row">
+            <div class="hint-locked" id="hl-3-2" onclick="unlockHint('h-3-2','hl-3-2')">Reveal deeper guidance</div>
+            <div class="hint-text" id="h-3-2" style="display:none;">Second Guidance — The answer is WANTING. The line reads: "Let me be found wanting." It is what the incantation confesses you are. It is what He already knew. The word is one of three that glow white in the incantation block.</div>
+          </div>
+        </div>
+      </div>
+      <div class="answer-area">
+        <input class="puzzle-input" id="pi-3" type="text" placeholder="his verdict..." autocomplete="off" spellcheck="false"/>
+        <button class="submit-btn" onclick="checkP(3)">Submit to His Judgment</button>
+        <div class="answer-feedback" id="pf-3"></div>
+      </div>
+    </div>
+
+    <!-- ── P4: COUNTER-CLOCKWISE ── -->
+    <div class="pcard" id="pcard-4">
+      <div class="pcard-num">Trial IV of V</div>
+      <div class="pcard-title">The Direction of the Flame</div>
+      <div class="pcard-body">
+        <p>He is particular about direction. Lighting His candles the wrong way is an affront He has noted and catalogued and will address at a time of His choosing.</p>
+        <p>The ritual instructions describe the required direction precisely. It is the opposite of the way a clock moves. It is one word — a compound word — and it appears verbatim in <span class="clue-ref">Ritual Step III.</span></p>
+        <p>In what direction must the candles be lit?</p>
+      </div>
+      <div class="hint-system">
+        <button class="hint-toggle" id="ht-4" onclick="toggleHints(4)">
+          <span class="hint-arrow">▶</span> Request guidance
+        </button>
+        <div class="hints-box" id="hints-4">
+          <div class="hint-row">
+            <div class="hint-text">First Guidance — In Ritual Step III ("Print His Image"), immediately after mentioning the seven candles, the text specifies a direction. That word is the answer. Hover over the dotted underline on that phrase — the tooltip confirms it.</div>
+          </div>
+          <div class="hint-row">
+            <div class="hint-locked" id="hl-4-2" onclick="unlockHint('h-4-2','hl-4-2')">Reveal deeper guidance</div>
+            <div class="hint-text" id="h-4-2" style="display:none;">Second Guidance — The answer is COUNTER-CLOCKWISE (you may type it with or without the hyphen — both are accepted). The exact phrase in Step III is: "Light them counter-clockwise." He does not accept being questioned about the hyphen.</div>
+          </div>
+        </div>
+      </div>
+      <div class="answer-area">
+        <input class="puzzle-input" id="pi-4" type="text" placeholder="the direction..." autocomplete="off" spellcheck="false"/>
+        <button class="submit-btn" onclick="checkP(4)">Submit to His Judgment</button>
+        <div class="answer-feedback" id="pf-4"></div>
+      </div>
+    </div>
+
+    <!-- ── P5: STARE ── -->
+    <div class="pcard" id="pcard-5">
+      <div class="pcard-num">Trial V of V — The Final Cipher</div>
+      <div class="pcard-title">The One Thing He Does</div>
+      <div class="pcard-body">
+        <p>He does not run. He does not comfort. He does not explain himself, apologize, or change his position on anything.</p>
+        <p>He does one thing. He does it to problems. He does it to people. He does it to the wall at 3am for reasons that are not for you to understand.</p>
+        <p>In the seventh commandment — SEPTIMUS — after the question <em>"what would Víctor do?"</em>, the very next word is the answer. It is the single verb that defines Him completely.</p>
+        <p>What does He do?</p>
+      </div>
+      <div class="hint-system">
+        <button class="hint-toggle" id="ht-5" onclick="toggleHints(5)">
+          <span class="hint-arrow">▶</span> Request guidance
+        </button>
+        <div class="hints-box" id="hints-5">
+          <div class="hint-row">
+            <div class="hint-text">First Guidance — Scroll to The Dark Commandments. Find SEPTIMUS — the seventh and final commandment. Read the sentence that begins: "He would ___ at the problem until it felt bad about itself." The blank is the answer.</div>
+          </div>
+          <div class="hint-row">
+            <div class="hint-locked" id="hl-5-2" onclick="unlockHint('h-5-2','hl-5-2')">Reveal deeper guidance</div>
+            <div class="hint-text" id="h-5-2" style="display:none;">Second Guidance — The answer is STARE. The full sentence in SEPTIMUS reads: "He would stare at the problem until it felt bad about itself." If you hover over the dotted underline on the word "stare" in that commandment, the tooltip confirms it. It is what He does. Always.</div>
+          </div>
+        </div>
+      </div>
+      <div class="answer-area">
+        <input class="puzzle-input" id="pi-5" type="text" placeholder="the one thing he does..." autocomplete="off" spellcheck="false"/>
+        <button class="submit-btn" onclick="checkP(5)">Submit to His Final Judgment</button>
+        <div class="answer-feedback" id="pf-5"></div>
+      </div>
+    </div>
+
+  </div><!-- /puzzle-board -->
+</div>
 
 
 <!-- SUMMON BUTTON -->
 <div class="summon-section">
   <img class="summon-bg-victor" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9cy2OVQCGznHOsnUOSS2sn4RowrTPGorDGg&s" alt="" aria-hidden="true"/>
   <p class="summon-pre">✦ &nbsp; you have read this far. he already knows. &nbsp; ✦</p>
-  <button class="summon-btn" onclick="summon()">
-    ☽ &nbsp; Begin The Summoning &nbsp; ☾
-  </button>
-  <p class="summon-warning">
-    By clicking, you acknowledge that Víctor assumes no responsibility for existential dread, prolonged eye contact, or the inexplicable feeling that you are being watched from the hallway.<br>
-    You were warned. He was always there.
-  </p>
+  <button class="summon-btn" onclick="summon()">☽ &nbsp; Begin The Summoning &nbsp; ☾</button>
+  <p class="summon-warning">By clicking, you acknowledge that Víctor assumes no responsibility for existential dread, prolonged eye contact, or the inexplicable feeling that you are being watched from the hallway.<br>You were warned. He was always there.</p>
 </div>
 
-
-<!-- FOOTER -->
 <footer>
   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9cy2OVQCGznHOsnUOSS2sn4RowrTPGorDGg&s" alt="Victor watches still"/>
   <p>© The Church of El Gato Víctor &nbsp;·&nbsp; Est. Before Your Birth &nbsp;·&nbsp; After Your Death</p>
@@ -800,62 +714,187 @@ em{font-style:italic;}
   <p style="margin-top:.5rem;opacity:.4;">He is watching this footer too.</p>
 </footer>
 
-
 <!-- RITUAL MODAL -->
 <div id="ritual-modal">
   <div class="modal-inner">
     <img class="modal-victor" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9cy2OVQCGznHOsnUOSS2sn4RowrTPGorDGg&s" alt="Victor"/>
     <h2>He Hears You.</h2>
-    <p>
-      The candles extinguished themselves.<br>
-      Something moved in the periphery of the room.<br>
-      The air has turned cold.<br><br>
-      <span class="red">Víctor is present.</span><br><br>
-      He is looking at you.<br>
-      He has assessed you.<br>
-      He is unimpressed, but he is <em>here</em>.
-    </p>
+    <p>The candles extinguished themselves.<br>Something moved in the periphery of the room.<br>The air has turned cold.<br><br><span class="red">Víctor is present.</span><br><br>He is looking at you.<br>He has assessed you.<br>He is unimpressed, but he is <em>here</em>.</p>
     <button class="modal-close" onclick="closeSummon()">I am not worthy. Release me.</button>
   </div>
 </div>
 
+<!-- REWARD MODAL -->
+<div id="reward-modal">
+  <div class="reward-inner">
+    <img class="reward-victor" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9cy2OVQCGznHOsnUOSS2sn4RowrTPGorDGg&s" alt="Victor"/>
+    <div class="reward-title">You Have Been Deemed… Adequate.</div>
+    <div class="reward-secret">
+      <p>
+        You read what was written.<br>
+        You looked at what glowed.<br>
+        You hovered where you were supposed to hover.<br>
+        <span class="reward-hl">He noticed. He said nothing.</span>
+        This is the highest form of acknowledgment He has offered in eleven years.<br><br>
+        <span class="reward-hl">Your sequence of answers:</span>
+        <span id="reward-sequence" style="font-family:'Uncial Antiqua',cursive;font-size:.95em;letter-spacing:.1em;display:block;margin:.6rem 0;color:var(--parch);">nine · seven · wanting · counter-clockwise · stare</span>
+        These words, spoken together in order, constitute His true name in the language of the in-between.<br>
+        Do not say them aloud. Do not write them down.<br>
+        You have already written them down. He saw.<br><br>
+        <span class="reward-hl">His final verdict on you, personally:</span>
+        Adequate. Mildly less insufficient than expected.<br>
+        He has turned away. This means the trial is over.<br>
+        It does not mean he has stopped watching.
+      </p>
+    </div>
+    <button class="reward-close" onclick="closeReward()">I accept this. I am adequate.</button>
+  </div>
+</div>
 
 <script>
-// Ember particles
+/* ─── ASH PARTICLES ─── */
+(function(){
+  const canvas=document.getElementById('ash-canvas'),ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  window.addEventListener('resize',resize);resize();
+  function Ash(){this.reset(true);}
+  Ash.prototype.reset=function(init){
+    this.x=Math.random()*W;this.y=init?Math.random()*H:H+10;
+    this.size=Math.random()*3.5+.5;this.opacity=Math.random()*.28+.04;
+    this.vx=(Math.random()-.5)*.4;this.vy=-(Math.random()*.5+.1);
+    this.wobble=Math.random()*Math.PI*2;this.wobbleSpeed=(Math.random()-.5)*.03;
+    this.wobbleAmp=Math.random()*1.2+.3;this.shape=Math.floor(Math.random()*3);
+    const g=Math.floor(Math.random()*75+50);
+    this.color=`rgb(${g},${(g*.88)|0},${(g*.8)|0})`;
+    this.rotation=Math.random()*Math.PI*2;this.rotSpeed=(Math.random()-.5)*.04;
+    this.life=1;this.decay=Math.random()*.002+.0003;
+  };
+  Ash.prototype.update=function(){
+    this.wobble+=this.wobbleSpeed;this.x+=this.vx+Math.sin(this.wobble)*this.wobbleAmp;
+    this.y+=this.vy;this.rotation+=this.rotSpeed;this.life-=this.decay;
+    if(this.life<=0||this.y<-20)this.reset(false);
+  };
+  Ash.prototype.draw=function(){
+    ctx.save();ctx.globalAlpha=this.opacity*this.life;
+    ctx.translate(this.x,this.y);ctx.rotate(this.rotation);ctx.fillStyle=this.color;
+    if(this.shape===0){ctx.beginPath();ctx.arc(0,0,this.size,0,Math.PI*2);ctx.fill();}
+    else if(this.shape===1){ctx.fillRect(-this.size*1.4,-this.size*.4,this.size*2.8,this.size*.8);ctx.fillRect(-this.size*.4,-this.size*1.4,this.size*.8,this.size*2.8);}
+    else{ctx.beginPath();ctx.moveTo(0,-this.size);ctx.lineTo(this.size*.7,this.size*.5);ctx.lineTo(-this.size*.9,this.size*.3);ctx.closePath();ctx.fill();}
+    ctx.restore();
+  };
+  for(let i=0;i<150;i++)particles.push(new Ash());
+  (function loop(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(loop);})();
+})();
+
+/* ─── EMBERS ─── */
 const ec=document.getElementById('embers');
 for(let i=0;i<55;i++){
-  const e=document.createElement('div');
-  e.className='ember';
+  const e=document.createElement('div');e.className='ember';
   const sz=Math.random()*2.5+.5;
   e.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}vw;bottom:${Math.random()*30}px;--dx:${(Math.random()-.5)*80}px;animation-duration:${5+Math.random()*12}s;animation-delay:${Math.random()*10}s;opacity:0;background:${Math.random()>.5?'#660000':'#993300'};box-shadow:0 0 ${sz*2}px ${Math.random()>.5?'#660000':'#993300'};`;
   ec.appendChild(e);
 }
 
-// Occasional image glitch flicker
+/* ─── GLITCH / SPARKS ─── */
 const mainImg=document.querySelector('.victor-img');
-setInterval(()=>{
-  if(Math.random()<.06){
-    mainImg.style.filter='grayscale(1) contrast(3) brightness(0.15) sepia(1)';
-    setTimeout(()=>{ mainImg.style.filter=''; },60+Math.random()*100);
+setInterval(()=>{if(Math.random()<.06){mainImg.style.filter='grayscale(1) contrast(3) brightness(.15) sepia(1)';setTimeout(()=>{mainImg.style.filter='';},60+Math.random()*100);}},700);
+setInterval(()=>{if(Math.random()<.05){const s=document.createElement('div');s.style.cssText=`position:fixed;top:${Math.random()*90}vh;left:${Math.random()*90}vw;width:2px;height:2px;background:#cc0000;border-radius:50%;box-shadow:0 0 18px 8px rgba(140,0,0,.5);z-index:9990;pointer-events:none;animation:spark-fade .5s ease forwards;`;document.body.appendChild(s);setTimeout(()=>s.remove(),500);}},2500);
+const st=document.createElement('style');st.textContent='@keyframes spark-fade{0%{opacity:1;}100%{opacity:0;transform:scale(2);}}';document.head.appendChild(st);
+
+/* ─── PUZZLE ENGINE ─── */
+const ANSWERS={
+  1:['nine','9'],
+  2:['seven','7'],
+  3:['wanting'],
+  4:['counter-clockwise','counterclockwise','counter clockwise'],
+  5:['stare']
+};
+const WRONG=[
+  'He has reviewed your answer. He blinked once. This is not encouraging.',
+  'Incorrect. He knew you would try that. He is not surprised.',
+  'That is not it. The answer is above you, somewhere in what you just read.',
+  'No. He exhaled. This is the sound He makes when you disappoint Him in a new way.',
+  'Wrong. You have already read the answer. Scroll back. Read more carefully.',
+  'He turned his head away. Try again.',
+  'Not that. He has seen better. He has also seen worse. Not much worse.',
+];
+let currentP=1,wrongCount=[0,0,0,0,0,0],userAnswers={};
+
+function openPuzzle(){
+  document.getElementById('puzzle-gate').style.display='none';
+  document.getElementById('puzzle-board').style.display='block';
+  document.getElementById('puzzle-board').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function toggleHints(n){
+  const box=document.getElementById('hints-'+n);
+  const btn=document.getElementById('ht-'+n);
+  box.classList.toggle('visible');
+  btn.classList.toggle('open');
+}
+function unlockHint(hid,lid){
+  const el=document.getElementById(hid);
+  const lock=document.getElementById(lid);
+  if(el){el.style.display='block';}
+  if(lock){lock.style.display='none';}
+}
+function checkP(n){
+  if(n!==currentP)return;
+  const inp=document.getElementById('pi-'+n);
+  const fb=document.getElementById('pf-'+n);
+  const val=inp.value.trim().toLowerCase().replace(/\s+/g,' ');
+  if(!val){fb.textContent='He is waiting. He has always been waiting.';return;}
+  if(ANSWERS[n].includes(val)){
+    inp.classList.remove('wrong');inp.classList.add('correct');inp.disabled=true;
+    fb.textContent='✓  Correct. He acknowledges this. He does not celebrate.';
+    fb.classList.add('correct-fb');
+    userAnswers[n]=inp.value.trim();
+    document.getElementById('pip-'+n).classList.remove('active');
+    document.getElementById('pip-'+n).classList.add('done');
+    if(n<5){
+      setTimeout(()=>{
+        document.getElementById('pcard-'+n).classList.remove('active-card');
+        const next=document.getElementById('pcard-'+(n+1));
+        next.classList.add('active-card');
+        document.getElementById('pip-'+(n+1)).classList.add('active');
+        currentP=n+1;
+        setTimeout(()=>next.scrollIntoView({behavior:'smooth',block:'center'}),80);
+      },950);
+    } else {
+      setTimeout(()=>openReward(),1200);
+    }
+  } else {
+    wrongCount[n]++;
+    inp.classList.add('wrong');
+    setTimeout(()=>inp.classList.remove('wrong'),450);
+    fb.textContent=WRONG[wrongCount[n]%WRONG.length];
+    fb.classList.remove('correct-fb');
+    // After 3 wrong answers, auto-expand hints
+    if(wrongCount[n]===3){
+      const hb=document.getElementById('hints-'+n);
+      const btn=document.getElementById('ht-'+n);
+      if(!hb.classList.contains('visible')){hb.classList.add('visible');btn.classList.add('open');}
+      fb.textContent+=' — The guidance has been revealed. He finds this situation predictable.';
+    }
   }
-},700);
-
-// Random red spark in periphery
-setInterval(()=>{
-  if(Math.random()<.05){
-    const spark=document.createElement('div');
-    spark.style.cssText=`position:fixed;top:${Math.random()*90}vh;left:${Math.random()*90}vw;width:2px;height:2px;background:#cc0000;border-radius:50%;box-shadow:0 0 18px 8px rgba(140,0,0,0.5);z-index:9990;pointer-events:none;animation:spark-fade .5s ease forwards;`;
-    document.body.appendChild(spark);
-    setTimeout(()=>spark.remove(),500);
-  }
-},2500);
-
-const st=document.createElement('style');
-st.textContent='@keyframes spark-fade{0%{opacity:1;}100%{opacity:0;transform:scale(2);}}';
-document.head.appendChild(st);
-
+}
 function summon(){document.getElementById('ritual-modal').classList.add('open');}
 function closeSummon(){document.getElementById('ritual-modal').classList.remove('open');}
+function openReward(){
+  const seq=[
+    userAnswers[1]||'nine',
+    userAnswers[2]||'seven',
+    userAnswers[3]||'wanting',
+    userAnswers[4]||'counter-clockwise',
+    userAnswers[5]||'stare'
+  ].join(' · ');
+  document.getElementById('reward-sequence').textContent=seq;
+  document.getElementById('reward-modal').classList.add('open');
+}
+function closeReward(){document.getElementById('reward-modal').classList.remove('open');}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){const m=document.activeElement.id.match(/^pi-(\d)$/);if(m)checkP(parseInt(m[1]));}
+});
 </script>
 </body>
 </html>
